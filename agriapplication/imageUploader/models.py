@@ -9,6 +9,9 @@ class UploadedData(models.Model):
     image = models.ImageField(upload_to='uploaded_images/')
     latitude = models.FloatField()
     longitude = models.FloatField()
-    timestamp = models.TimeField()
     uploaded_time = models.DateTimeField(auto_now_add=True)
+    details = models.TextField()
     user = models.ForeignKey(to=User,on_delete=models.CASCADE,related_name='uploaded_images')
+
+    def __str__(self):
+        return f'Image - {self.uuid} created by {self.user} at {self.uploaded_time}'
