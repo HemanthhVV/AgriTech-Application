@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Django Project{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function toggleModal() {
+            const modal = document.getElementById('uploadModal');
+            modal.classList.toggle('hidden');
+        }
+    </script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md">
+        <div class="container mx-auto flex items-center justify-between p-4">
+            <h1 class="text-2xl font-bold">
+                <a href="/" class="hover:underline">My Django Project</a>
+            </h1>
+            <!-- Navigation -->
+            <nav class="flex items-center space-x-6">
+                <a href="/" class="hover:underline">Home</a>
+                <a href="#" class="hover:underline">Map</a>
+            </nav>
+            <!-- User Info and Logout Button -->
+            <div class="flex items-center space-x-4">
+                <span class="text-white">(~{{ request.user.username }})</span>
+                <form method="post" action="{% url "logout" %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-500 px-4 py-2 rounded-md hover:bg-red-600">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto mt-8">
+        <div class="flex justify-end mb-4">
+            <!-- Upload Button -->
+            <button onclick="toggleModal()" class="bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600">
+                Add Data
+            </button>
+        </div>
+        {% block content %}
+        <!-- Content will be injected here -->
+        {% endblock %}
+    </main>
+
+    <!-- Modal for Image Upload -->
+    <div id="uploadModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-11/12 md:w-1/3">
+            <h2 class="text-lg font-bold mb-4">Upload Image</h2>
+            <form method="post" action="{% url "imageupload" %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="image" class="block text-sm font-medium text-gray-700">Select Image</label>
+                    <input type="file" id="image" name="image" accept="image/*" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-500">
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" onclick="toggleModal()" class="mr-2 bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400">Cancel</button>
+                    <button type="submit" class="bg-blue-500 px-4 py-2 rounded-md text-white hover:bg-blue-600">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</body>
+</html>

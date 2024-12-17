@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+
+{% block content %}
+<div class="mt-4">
+    {% for img in images %}
+    <div class="bg-white border border-gray-300 rounded-lg shadow-md flex p-4 mb-4 w-full">
+        <!-- Image Section (40%) -->
+        <div class="flex-shrink-0 w-2/5">
+            <img src="{{ img.image.url }}" alt="Uploaded Image" class="w-full h-80 object-cover rounded-md cursor-pointer"
+                onclick="openImageViewer('{{ img.image.url }}')">
+        </div>
+
+        <!-- Details Section (50%) -->
+        <div class="ml-4 flex-grow w-3/5">
+            <h3 class="text-lg font-semibold">Image Details</h3>
+            <p><strong>Uploaded At:</strong> {{ img.uploaded_time }}</p>
+            <p><strong>Latitude:</strong> {{ img.latitude }}</p>
+            <p><strong>Longitude:</strong> {{ img.longitude }}</p>
+            <p><strong>Other Info:</strong></p>
+            {% for detail in img.details|split_string:"?" %}
+                <p>{{ detail }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- Action Section (10%) -->
+        <div class="flex items-center ml-4 w-1/10">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Modal for Image Viewer -->
+<div id="imageViewer" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden">
+    <div class="relative">
+        <button onclick="closeImageViewer()" class="absolute top-2 right-2 bg-gray-100 p-2 rounded-full hover:bg-gray-200">
+            ✕
+        </button>
+        <img id="modalImage" src="" alt="Large View" class="max-w-full max-h-screen rounded-lg shadow-lg">
+    </div>
+</div>
+
+<script>
+    function openImageViewer(imageUrl) {
+        const modal = document.getElementById('imageViewer');
+        const modalImage = document.getElementById('modalImage');
+        modalImage.src = imageUrl; // Set the clicked image's URL
+        modal.classList.remove('hidden'); // Show the modal
+    }
+
+    function closeImageViewer() {
+        const modal = document.getElementById('imageViewer');
+        modal.classList.add('hidden'); // Hide the modal
+    }
+</script>
+
+
+{% endblock content %}
