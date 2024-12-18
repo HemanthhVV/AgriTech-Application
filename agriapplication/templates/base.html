@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Django Project{% endblock %}</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function toggleModal() {
@@ -11,6 +12,29 @@
             modal.classList.toggle('hidden');
         }
     </script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 64px);
+        }
+        #map {
+            flex: 1;
+            width: 100%;
+        }
+        .leaflet-popup-content {
+        width: 300px;
+        max-width: 400px;
+        }
+        .leaflet-popup-content img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
     <!-- Header -->
@@ -22,7 +46,7 @@
             <!-- Navigation -->
             <nav class="flex items-center space-x-6">
                 <a href="/" class="hover:underline">Home</a>
-                <a href="#" class="hover:underline">Map</a>
+                <a href='{% url "showmap" %}' class="hover:underline">Map</a>
             </nav>
             <!-- User Info and Logout Button -->
             <div class="flex items-center space-x-4">
@@ -39,12 +63,9 @@
 
     <!-- Main Content -->
     <main class="container mx-auto mt-8">
-        <div class="flex justify-end mb-4">
-            <!-- Upload Button -->
-            <button onclick="toggleModal()" class="bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600">
-                Add Data
-            </button>
-        </div>
+        {% block button %}
+
+        {% endblock button %}
         {% block content %}
         <!-- Content will be injected here -->
         {% endblock %}
