@@ -10,7 +10,9 @@ class UploadedData(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     uploaded_time = models.DateTimeField(auto_now_add=True)
-    details = models.TextField()
+    farmerID = models.TextField(null=True)
+    farmerName = models.TextField(null=True)
+    timeOfPhoto = models.TextField(null=True)
     user = models.ForeignKey(to=User,on_delete=models.CASCADE,related_name='uploaded_images')
 
     def __str__(self):
