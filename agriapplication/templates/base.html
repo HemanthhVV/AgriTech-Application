@@ -3,15 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Django Project{% endblock %}</title>
+    <title>{% block title %}AgriTech{% endblock %}</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function toggleModal() {
             const modal = document.getElementById('uploadModal');
             modal.classList.toggle('hidden');
         }
+
+        // Show the processing modal when the upload form is submitted
+        document.addEventListener('DOMContentLoaded', function () {
+            const uploadForm = document.querySelector('form[action="{% url "imageupload" %}"]');
+            if (uploadForm) {
+                uploadForm.addEventListener('submit', function () {
+                    const processingModal = document.getElementById('processingModal');
+                    processingModal.classList.remove('hidden'); // Show the processing modal
+                });
+            }
+        });
     </script>
+
     <style>
         body, html {
             height: 100%;
@@ -34,6 +49,9 @@
             width: 100%;
             height: 100%;
         }
+        #processingModal {
+            z-index: 1050;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -41,12 +59,12 @@
     <header class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md">
         <div class="container mx-auto flex items-center justify-between p-4">
             <h1 class="text-2xl font-bold">
-                <a href="/" class="hover:underline">My Django Project</a>
+                AgriTech Application
             </h1>
             <!-- Navigation -->
             <nav class="flex items-center space-x-6">
-                <a href="/" class="hover:underline">Home</a>
-                <a href='{% url "showmap" %}' class="hover:underline">Map</a>
+                <a href="/" class="transition-colors duration-300 hover:text-red-600">Home</a>
+                <a href='{% url "showmap" %}' class="transition-colors duration-300 hover:text-red-600">Map</a>
             </nav>
             <!-- User Info and Logout Button -->
             <div class="flex items-center space-x-4">
@@ -64,12 +82,23 @@
     <!-- Main Content -->
     <main class="container mx-auto mt-8">
         {% block button %}
-
         {% endblock button %}
+
         {% block content %}
-        <!-- Content will be injected here -->
         {% endblock %}
     </main>
+
+    <!-- Processing Modal -->
+    <div id="processingModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-6 text-center">
+            <h2 class="text-lg font-bold mb-4">Processing...</h2>
+            <p>Please wait while we process your image.</p>
+            <div class="spinner-border text-primary mt-4" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Modal for Image Upload -->
     <div id="uploadModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
