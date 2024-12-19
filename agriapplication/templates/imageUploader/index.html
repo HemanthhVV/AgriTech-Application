@@ -2,6 +2,23 @@
 {% load custom_filters %}
 
 
+{% block button %}
+
+
+
+        <div class="flex justify-start mb-4">
+           {% include "partials/_message.html" %}
+        </div>
+        <div class="flex justify-end mb-4">
+            <!-- Upload Button -->
+            <button onclick="toggleModal()" class="bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600">
+                Add Data
+            </button>
+        </div>
+
+
+{% endblock button %}
+
 {% block content %}
 <div class="mt-4">
     {% for img in images %}
@@ -18,15 +35,14 @@
             <p><strong>Uploaded At:</strong> {{ img.uploaded_time }}</p>
             <p><strong>Latitude:</strong> {{ img.latitude }}</p>
             <p><strong>Longitude:</strong> {{ img.longitude }}</p>
-            <p><strong>Other Info:</strong></p>
-            {% for detail in img.details|split_string:"?" %}
-                <p>{{ detail }}</p>
-            {% endfor %}
+            <p><strong>FarmerID:</strong>{{img.farmerID}}</p>
+            <p><strong>FarmerName:</strong>{{img.farmerName}}</p>
+            <p><strong>Photo Taken on:</strong>{{img.timeOfPhoto}}</p>
         </div>
 
         <!-- Action Section (10%) -->
         <div class="flex items-center ml-4 w-1/10">
-            <form method="POST" action="">
+            <form method="POST" action="{% url 'delete' img.uuid %}">
                 {% csrf_token %}
                 <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
                     Delete

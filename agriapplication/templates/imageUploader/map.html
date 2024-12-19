@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Map View
+{% endblock %}
+
+{% block content %}
+    <div id="map" class="mt-4"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map centered on India
+        const map = L.map('map').setView([20.5937, 78.9629], 5); // Centered on India with zoom level 5
+
+        // Add Tile Layer (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Coordinates passed through context
+        const markers = [
+            {% if images %}
+                {% for image in images %}
+                    {
+                        latitude: {{ image.latitude }},
+                        longitude: {{ image.longitude }},
+                        details: `
+                            <strong>ID: </strong>{{ image.farmerID }} <br>
+                            <strong>Name: </strong>{{ image.farmerName }}<br>
+                            <a href="https://www.google.com/maps?q={{ image.latitude }},{{ image.longitude }}" target="_blank" class="text-blue-500 hover:underline">Share this location</a>
+                        `,
+                        imageUrl: "{{ image.image }}"
+                    }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            {% else %}
+                {
+                    latitude: 0,
+                    longitude: 0,
+                    details: "Equator - No markers available",
+                    imageUrl: ""
+                }
+            {% endif %}
+        ];
+
+        // Loop through markers and add them to the map
+        markers.forEach(marker => {
+            const popupContent = `
+                ${marker.details}<br>
+                <img src="../media/${marker.imageUrl}" alt="Image" style="width: 300px; height: auto;">
+            `;
+
+            L.marker([marker.latitude, marker.longitude])
+                .addTo(map)
+                .bindPopup(popupContent);
+        });
+    </script>
+{% endblock %}
