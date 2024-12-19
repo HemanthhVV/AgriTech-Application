@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id="map" class="mt-4"></div>
+    <div id="map"></div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -29,7 +29,8 @@
                         details: `
                             <strong>ID: </strong>{{ image.farmerID }} <br>
                             <strong>Name: </strong>{{ image.farmerName }}<br>
-                            <a href="https://www.google.com/maps?q={{ image.latitude }},{{ image.longitude }}" target="_blank" class="text-blue-500 hover:underline">Share this location</a>
+                            <strong>Uploaded By: </strong>{{ image.user }}<br>
+                            <a href="https://www.google.com/maps?q={{ image.latitude }},{{ image.longitude }}" target="_blank" class="text-blue-500 hover:underline">show this location</a>
                         `,
                         imageUrl: "{{ image.image }}"
                     }{% if not loop.last %},{% endif %}
