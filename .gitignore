@@ -1,4 +1,7 @@
 venv/
 .aws
 .env
-*.cpython-312.pyc
+agriapplication/agriapp/__pycache__/*
+agriapplication/imageUploader/__pycache__/*
+agriapplication/media/*
+agriapplication/temp/*
