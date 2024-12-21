@@ -49,14 +49,14 @@ class SetNewPassword(View):
                 return render(request,'authentication/set-new-password.html',context)
             if len(password) < 8 or len(confirm_password) < 8:
                 messages.info(request,"Password should have a length of 8")
-                return render(request,'authentication/set-new-password.html')
+                return render(request,'authentication/set-new-password.html',context)
             user_id = force_str(urlsafe_base64_decode(uuid))
             user = User.objects.get(pk=user_id)
             user.set_password(confirm_password)
             user.save()
         except:
             messages.info(request,"Something went Wrong, Try again")
-            return redirect('set-new-password')
+            return redirect('reset-password')
         messages.success(request,"Password Changed")
         return redirect('login')
 
