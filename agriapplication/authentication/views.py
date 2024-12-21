@@ -19,9 +19,28 @@ from django import forms
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import threading
 
 # from django.core.mail.backends.smtp import EmailBackend
 # Create your views here.
+class EmailThreading(threading.Thread):
+    def __init__(self, subject, message, from_email, recipient_list):
+        self.subject = subject
+        self.message = message
+        self.from_email = from_email
+        self.recipient_list = recipient_list
+        threading.Thread.__init__(self)
+
+    def run(self):
+        # Send the email within the thread
+        send_mail(
+            subject=self.subject,
+            message=self.message,
+            from_email=self.from_email,
+            recipient_list=self.recipient_list,
+            fail_silently=False
+        )
+
 class SetNewPassword(View):
     def get(self,request,uuid,token):
         context = {
@@ -80,15 +99,15 @@ class ResetPasswordView(View):
         activation_url = 'http://'+domain+query_parameter_for_activation
 
 
-        verification_mail_sent = send_mail(
+        verification_mail_sent = EmailThreading(
             subject="Registered Sucessfully!",
             message=f"New Password request raised, This Link will be used only once.\nTo To reset the password:\n{activation_url}",
             from_email=str(settings.EMAIL_HOST_USER),
             recipient_list=[
                 registered_mail
             ],
-            fail_silently=False
         )
+        verification_mail_sent.start()
         messages.success(request,"Password reset mail has been sent to your registered mail Id")
         return render(request,'authentication/reset-password.html')
 
@@ -195,15 +214,15 @@ class RegistrationView(View):
                 query_parameter_for_activation = reverse('verification',kwargs={'uuid':uuid,'token':token_generator.make_token(user)})
                 activation_url = 'http://'+domain+query_parameter_for_activation
 
-                verification_mail_sent = send_mail(
+                verification_mail_sent = EmailThreading(
                     subject="Registered Sucessfully!",
                     message=f"Thanks for registering in this app, None of your data has been cached.\nTo Verify your mail:\n{activation_url}",
                     from_email=str(settings.EMAIL_HOST_USER),
                     recipient_list=[
                         email
-                    ],
-                    fail_silently=False
+                    ]
                 )
+                verification_mail_sent.start()
 
                 print("Domain printing ===== > ",domain)
                 print(settings.EMAIL_HOST_USER)
