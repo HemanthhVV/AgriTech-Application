@@ -3,12 +3,24 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
-import os
+import os,json
 from .utils import ProcessImage
 from .models import UploadedData
 from django.contrib import messages
+from django.http import JsonResponse,HttpResponse
+import pdb
 
 processor = ProcessImage()
+
+def searchData(request):
+    if request.method == 'POST':
+        search_str = json.loads(request.body).get("searchField")
+        parsedData = (
+            UploadedData.objects.filter(farmerID__istartswith=search_str,user = request.user) |
+            UploadedData.objects.filter(farmerName__icontains=search_str,user = request.user)
+        )
+        search_data = parsedData.values()
+        return JsonResponse(list(search_data),safe=False)
 
 def deleteImage(request,uuid:str):
     if request.method == 'POST':
@@ -31,7 +43,7 @@ def showMap(request):
 
 @login_required(login_url='/authentication/login')
 def index(request):
-    images = UploadedData.objects.all()
+    images = UploadedData.objects.filter(user=request.user)
 
     if not images:
         return render(request=request,template_name='imageUploader/empty.html')
@@ -61,12 +73,16 @@ def add_image(request):
         try:
             listValues = processor.processingImage(temp_path,image.name)
         except:
-            return "Unable to parse the image"
+            os.remove(temp_path)
+            messages.error(request,"Unable to parse the image.")
+            return redirect('home')
 
         if len(listValues) > 2:
             coordinates = processor.getCoordinates(listValues)
         else:
-            return "Unable to parse the image"
+            os.remove(temp_path)
+            messages.info(request,"Unable to get the co-ordinates, Check the image has co-ordinates")
+            return redirect('home')
 
         latitude = coordinates[0].replace(' ','').split(':')[1]
         longitude = coordinates[1].replace(' ','').split(':')[1]
