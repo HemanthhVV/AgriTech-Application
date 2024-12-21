@@ -12,6 +12,7 @@ class ToShowAttributesInExpenses(admin.ModelAdmin):
         'farmerID',
         'farmerName',
         'timeOfPhoto',
+        'user'
     )
 
 admin.site.register(UploadedData,ToShowAttributesInExpenses)
