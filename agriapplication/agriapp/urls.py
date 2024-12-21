@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('agriTechAdmin/', admin.site.urls),
     path('',include('imageUploader.urls'),name='imageUploader'),
     path("authentication/", include('authentication.urls'), name="authentication"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
