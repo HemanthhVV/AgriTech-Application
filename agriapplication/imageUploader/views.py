@@ -12,6 +12,7 @@ import pdb
 
 processor = ProcessImage()
 
+@login_required(login_url='/authentication/login')
 def searchData(request):
     if request.method == 'POST':
         search_str = json.loads(request.body).get("searchField")
@@ -22,6 +23,7 @@ def searchData(request):
         search_data = parsedData.values()
         return JsonResponse(list(search_data),safe=False)
 
+@login_required(login_url='/authentication/login')
 def deleteImage(request,uuid:str):
     if request.method == 'POST':
         getData = UploadedData.objects.get(user=request.user,uuid=uuid)
@@ -31,6 +33,7 @@ def deleteImage(request,uuid:str):
         messages.error(request,message=f"File ID {uuid} deleted sucesssfully")
         return redirect('home')
 
+@login_required(login_url='/authentication/login')
 def showMap(request):
     coodinates = UploadedData.objects.all()
     context = {
@@ -55,6 +58,7 @@ def index(request):
     # pdb.set_trace()
     return render(request,'imageUploader/index.html',context=context)
 
+@login_required(login_url='/authentication/login')
 def add_image(request):
     if request.method == 'POST' and 'image' in request.FILES:
         image = request.FILES['image']
