@@ -1,0 +1,74 @@
+body,html {
+    height: 100%;
+    margin: 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 64px);
+}
+
+#map {
+    flex: 1;
+    width: 100%;
+}
+
+.leaflet-popup-content {
+    width: 300px;
+    max-width: 400px;
+}
+
+.leaflet-popup-content img {
+    width: 100%;
+    height: 100%;
+}
+
+#processingModal {
+    z-index: 1050;
+}
+
+/* Smaller screens (mobile) */
+@media (max-width: 640px) {
+    header {
+        padding: 0.5rem;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #searchBlock,
+    #actualBlock {
+        padding: 1rem;
+    }
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .details-section {
+        flex-direction: column;
+    }
+}
+
+/* Large screens (desktops) */
+@media (min-width: 1025px) {
+    .details-section {
+        flex-direction: row;
+    }
+}
+
+.messages {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.messages li {
+    transition: all 0.3s ease;
+    /* Smooth hover effects */
+}
+
+/* Add hover effects for alerts */
+.alert:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
