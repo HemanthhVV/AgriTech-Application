@@ -11,16 +11,9 @@ django-jazzmin==3.0.1
 editdistpy==0.1.5
 executing==2.1.0
 gunicorn==23.0.0
-ipykernel==6.29.5
-ipython==8.30.0
 jedi==0.19.2
 jmespath==1.0.1
-joblib==1.4.2
-jupyter_client==8.6.3
-jupyter_core==5.7.2
-matplotlib-inline==0.1.7
 nest-asyncio==1.6.0
-nltk==3.9.1
 numpy==2.2.0
 opencv-python==4.10.0.84
 packaging==24.2
@@ -34,7 +27,6 @@ psycopg2-binary==2.9.10
 ptyprocess==0.7.0
 pure_eval==0.2.3
 Pygments==2.18.0
-pytesseract==0.3.13
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pyzmq==26.2.0
